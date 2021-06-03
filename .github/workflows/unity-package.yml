@@ -8,8 +8,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        echo "Assets/Voiceer.meta" > metaList
-        find Assets/Voiceer/ -name \*.meta >> metaList
+        echo "Runtime.meta" > metaList
+        find Runtime/ -name \*.meta >> metaList
 
     - run: mkdir a
 
