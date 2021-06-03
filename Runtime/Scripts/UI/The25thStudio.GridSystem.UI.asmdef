@@ -1,0 +1,16 @@
+{
+    "name": "The25thStudio.GridSystem.UI",
+    "rootNamespace": "The25thStudio.GridSystem.UI",
+    "references": [
+        "GUID:7500e2c91b59f452493e78c7885f77bf"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
