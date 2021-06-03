@@ -1,6 +1,6 @@
 {
     "name": "com.the25thstudio.gridsystem",
-    "version": "0.10.0",
+    "version": "0.11.0",
     "displayName": "Grid System",
     "description": "Unity 2D Grid System",
     "unity": "2019.1",
