@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace The25thStudio.GridSystem
 {
@@ -128,6 +130,23 @@ namespace The25thStudio.GridSystem
 
         #region Get Value methods
 
+        public List<TGridObject> ToList()
+        {
+            var list = new List<TGridObject>();
+
+            for (var x = 0; x < Width; x++)
+            {
+                for (var y = 0; y < Height; y++)
+                {
+                    var value = _gridArray[x, y].Value;
+                    if (value == null) continue;
+                    
+                    list.Add(value);
+                }
+            }
+
+            return list;
+        }
         public TGridObject GetValue(int x, int y)
         {
             if (IsInRange(x, y))
