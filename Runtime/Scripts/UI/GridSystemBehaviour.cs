@@ -45,19 +45,25 @@ namespace The25thStudio.GridSystem.UI
             var position = _grid.GetWorldPosition(x, y);
             var newItem = Instantiate(prefab, position, Quaternion.identity, transform);
             newItem.name = $"{prefab.name} - ({x}, {y})";
-            // todo Verificar o tamanho do item e setar Widht e Height
-            _grid.SetValue(x, y, newItem);
+            
+            var gridSize = GridSize(newItem);
+            _grid.SetValue(x, y, newItem, gridSize.Width, gridSize.Height);
 
             _colorGameObjectMap.Put(pixelColor, newItem);
 
         }
-
+        
         private bool TryGetPrefab(int x, int y, out Color pixelColor, out GameObject prefab)
         {
             prefab = default;
             pixelColor = map.GetPixel(x, y);
             
             return pixelColor.a != 0 && _colorPrefabMap.TryGetValue(pixelColor, out prefab);
+        }
+
+        private IGridSize GridSize(GameObject newItem)
+        {
+            return newItem.GetComponent<IGridSize>() ?? new DefaultGridSize();
         }
 
     }
