@@ -14,7 +14,7 @@ namespace The25thStudio.GridSystem.UI
         
         private GridSystem<GameObject> _grid;
 
-        private Dictionary<Color, GameObject> _colorPrefabMap;
+        private Dictionary<Color32, GameObject> _colorPrefabMap;
         private GridColorMap _colorGameObjectMap;
 
         private void Awake()
