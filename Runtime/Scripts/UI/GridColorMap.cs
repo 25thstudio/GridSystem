@@ -5,14 +5,14 @@ namespace The25thStudio.GridSystem.UI
 {
     public class GridColorMap
     {
-        private readonly Dictionary<Color, List<GameObject>> _dict;
+        private readonly Dictionary<Color32, List<GameObject>> _dict;
 
         public GridColorMap()
         {
-            _dict = new Dictionary<Color, List<GameObject>>();
+            _dict = new Dictionary<Color32, List<GameObject>>();
         }
         
-        internal void Put(Color color, GameObject gameObject)
+        internal void Put(Color32 color, GameObject gameObject)
         {
             List<GameObject> list;
             if (!_dict.ContainsKey(color))
@@ -28,8 +28,8 @@ namespace The25thStudio.GridSystem.UI
 
         }
 
-        public IEnumerable<Color> Colors => _dict.Keys;
+        public IEnumerable<Color32> Colors => _dict.Keys;
 
-        public List<GameObject> this[Color color] => _dict.ContainsKey(color) ? _dict[color] : default;
+        public List<GameObject> this[Color32 color] => _dict.ContainsKey(color) ? _dict[color] : default;
     }
 }

@@ -5,10 +5,10 @@ namespace The25thStudio.GridSystem.UI
     [System.Serializable]
     public class ColorToPrefab
     {
-        [SerializeField] private Color color;
+        [SerializeField] private Color32 color;
         [SerializeField] private GameObject prefab;
 
-        public Color Color()
+        public Color32 Color()
         {
             return color;
         }
