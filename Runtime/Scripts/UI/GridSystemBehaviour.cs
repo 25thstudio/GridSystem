@@ -24,7 +24,7 @@ namespace The25thStudio.GridSystem.UI
 
         private void Start()
         {
-            _colorPrefabMap = prefabMap.ToDictionary(e => e.Color(), e => e.Prefab());
+            _colorPrefabMap = prefabMap.ToDictionary(e => Opaque(e.Color()), e => e.Prefab());
             _colorGameObjectMap = new GridColorMap();
             for (var x = 0; x < map.width; x++)
             {
@@ -36,6 +36,11 @@ namespace The25thStudio.GridSystem.UI
 
             postConstructEvent.Invoke(_colorGameObjectMap);
             
+        }
+
+        private static Color32 Opaque(Color32 color)
+        {
+            return new Color32(color.r, color.g, color.b, 1);
         }
 
         private void GenerateTile(int x, int y)
@@ -57,8 +62,10 @@ namespace The25thStudio.GridSystem.UI
         {
             prefab = default;
             pixelColor = map.GetPixel(x, y);
+
+            var opaquePixelColorNoAlpha = Opaque(pixelColor);
             
-            return pixelColor.a != 0 && _colorPrefabMap.TryGetValue(pixelColor, out prefab);
+            return pixelColor.a != 0 && _colorPrefabMap.TryGetValue(opaquePixelColorNoAlpha, out prefab);
         }
 
         private IGridSize GridSize(GameObject newItem)
