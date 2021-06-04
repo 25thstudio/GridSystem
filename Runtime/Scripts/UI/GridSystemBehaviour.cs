@@ -40,10 +40,7 @@ namespace The25thStudio.GridSystem.UI
 
         private void GenerateTile(int x, int y)
         {
-            var pixelColor = map.GetPixel(x, y);
-            if (pixelColor.a == 0) return;
-
-            if (!_colorPrefabMap.TryGetValue(pixelColor, out var prefab)) return;
+            if (!TryGetPrefab(x, y, out var pixelColor, out var prefab)) return;
             
             var position = _grid.GetWorldPosition(x, y);
             var newItem = Instantiate(prefab, position, Quaternion.identity, transform);
@@ -53,7 +50,14 @@ namespace The25thStudio.GridSystem.UI
 
             _colorGameObjectMap.Put(pixelColor, newItem);
 
+        }
 
+        private bool TryGetPrefab(int x, int y, out Color pixelColor, out GameObject prefab)
+        {
+            prefab = default;
+            pixelColor = map.GetPixel(x, y);
+            
+            return pixelColor.a != 0 && _colorPrefabMap.TryGetValue(pixelColor, out prefab);
         }
 
     }
