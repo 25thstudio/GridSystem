@@ -43,9 +43,8 @@ namespace The25thStudio.GridSystem.UI
             var pixelColor = map.GetPixel(x, y);
             if (pixelColor.a == 0) return;
 
-            var prefab = _colorPrefabMap[pixelColor];
-            if (prefab is null) return;
-
+            if (!_colorPrefabMap.TryGetValue(pixelColor, out var prefab)) return;
+            
             var position = _grid.GetWorldPosition(x, y);
             var newItem = Instantiate(prefab, position, Quaternion.identity, transform);
             newItem.name = $"{prefab.name} - ({x}, {y})";
@@ -53,6 +52,8 @@ namespace The25thStudio.GridSystem.UI
             _grid.SetValue(x, y, newItem);
 
             _colorGameObjectMap.Put(pixelColor, newItem);
+
+
         }
 
     }
