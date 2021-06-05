@@ -51,11 +51,27 @@ namespace The25thStudio.GridSystem.UI
             var newItem = Instantiate(prefab, position, Quaternion.identity, transform);
             newItem.name = $"{prefab.name} - ({x}, {y})";
             
-            var gridSize = GridSize(newItem);
-            _grid.SetValue(x, y, newItem, gridSize.Width, gridSize.Height);
+            GridSize(newItem, out var width, out var height);
+            _grid.SetValue(x, y, newItem, width, height);
 
             _colorGameObjectMap.Put(pixelColor, newItem);
 
+        }
+
+        private static void GridSize(GameObject newItem, out int width, out int height)
+        {
+            var gridComponent = newItem.GetComponent<GridComponent>();
+            
+            if (gridComponent == null)
+            {
+                width = 1;
+                height = 1;
+            }
+            else
+            {
+                width = gridComponent.Width;
+                height = gridComponent.Height;
+            }
         }
         
         private bool TryGetPrefab(int x, int y, out Color pixelColor, out GameObject prefab)
@@ -66,11 +82,6 @@ namespace The25thStudio.GridSystem.UI
             var opaquePixelColorNoAlpha = Opaque(pixelColor);
             
             return pixelColor.a != 0 && _colorPrefabMap.TryGetValue(opaquePixelColorNoAlpha, out prefab);
-        }
-
-        private IGridSize GridSize(GameObject newItem)
-        {
-            return newItem.GetComponent<IGridSize>() ?? new DefaultGridSize();
         }
 
     }
