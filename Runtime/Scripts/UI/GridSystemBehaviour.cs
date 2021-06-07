@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,12 +8,12 @@ namespace The25thStudio.GridSystem.UI
     {
         [SerializeField] private Texture2D map;
         [SerializeField] [Min(0)] private float cellSize = 10f;
-        [SerializeField] private ColorToPrefab[] prefabMap;
+        [SerializeField] private GridComponent[] gridComponents;
         [SerializeField] private UnityEvent<GridColorMap> postConstructEvent;
         
         private GridSystem<GameObject> _grid;
 
-        private Dictionary<Color32, GameObject> _colorPrefabMap;
+        private Dictionary<Color32, GridComponent> _colorGridComponentMap;
         private GridColorMap _colorGameObjectMap;
 
         private void Awake()
@@ -24,7 +23,8 @@ namespace The25thStudio.GridSystem.UI
 
         private void Start()
         {
-            _colorPrefabMap = prefabMap.ToDictionary(e => Opaque(e.Color()), e => e.Prefab());
+            CreateColorGridComponentMap();
+           
             _colorGameObjectMap = new GridColorMap();
             for (var x = 0; x < map.width; x++)
             {
@@ -38,6 +38,18 @@ namespace The25thStudio.GridSystem.UI
             
         }
 
+        private void CreateColorGridComponentMap()
+        {
+            _colorGridComponentMap = new Dictionary<Color32, GridComponent>();
+            foreach (var gridComponent in gridComponents)
+            {
+                foreach (var color in gridComponent.MappingColors)
+                {
+                    _colorGridComponentMap.Add(Opaque(color), gridComponent);
+                }
+            }
+        }
+
         private static Color32 Opaque(Color32 color)
         {
             return new Color32(color.r, color.g, color.b, 1);
@@ -49,39 +61,25 @@ namespace The25thStudio.GridSystem.UI
             
             var position = _grid.GetWorldPosition(x, y);
             var newItem = Instantiate(prefab, position, Quaternion.identity, transform);
+
+            if (newItem == null) return;
+            
             newItem.name = $"{prefab.name} - ({x}, {y})";
-            
-            GridSize(newItem, out var width, out var height);
-            _grid.SetValue(x, y, newItem, width, height);
+            var go = newItem.gameObject;
+            _grid.SetValue(x, y, go, newItem.Width, newItem.Height);
 
-            _colorGameObjectMap.Put(pixelColor, newItem);
+            _colorGameObjectMap.Put(pixelColor, go);
 
-        }
-
-        private static void GridSize(GameObject newItem, out int width, out int height)
-        {
-            var gridComponent = newItem.GetComponent<GridComponent>();
-            
-            if (gridComponent == null)
-            {
-                width = 1;
-                height = 1;
-            }
-            else
-            {
-                width = gridComponent.Width;
-                height = gridComponent.Height;
-            }
         }
         
-        private bool TryGetPrefab(int x, int y, out Color pixelColor, out GameObject prefab)
+        private bool TryGetPrefab(int x, int y, out Color32 pixelColor, out GridComponent gridComponent)
         {
-            prefab = default;
+            gridComponent = default;
             pixelColor = map.GetPixel(x, y);
 
             var opaquePixelColorNoAlpha = Opaque(pixelColor);
-            
-            return pixelColor.a != 0 && _colorPrefabMap.TryGetValue(opaquePixelColorNoAlpha, out prefab);
+
+            return pixelColor.a != 0 && _colorGridComponentMap.TryGetValue(opaquePixelColorNoAlpha, out gridComponent);
         }
 
     }
