@@ -10,7 +10,7 @@ namespace The25thStudio.GridSystem.UI
         [SerializeField] [Min(0)] private float cellSize = 10f;
         [SerializeField] private GridComponent[] gridComponents;
         [SerializeField] private UnityEvent<GridColorMap> postConstructEvent;
-        
+
         private GridSystem<GameObject> _grid;
 
         private Dictionary<Color32, GridComponent> _colorGridComponentMap;
@@ -24,7 +24,7 @@ namespace The25thStudio.GridSystem.UI
         private void Start()
         {
             CreateColorGridComponentMap();
-           
+
             _colorGameObjectMap = new GridColorMap();
             for (var x = 0; x < map.width; x++)
             {
@@ -35,7 +35,6 @@ namespace The25thStudio.GridSystem.UI
             }
 
             postConstructEvent.Invoke(_colorGameObjectMap);
-            
         }
 
         private void CreateColorGridComponentMap()
@@ -57,21 +56,53 @@ namespace The25thStudio.GridSystem.UI
 
         private void GenerateTile(int x, int y)
         {
+            if (!_grid.IsEmpty(x, y)) return;
+
             if (!TryGetPrefab(x, y, out var pixelColor, out var prefab)) return;
-            
+
+            if (!CanBuild(x, y, pixelColor, prefab)) return;
+
             var position = _grid.GetWorldPosition(x, y);
             var newItem = Instantiate(prefab, position, Quaternion.identity, transform);
 
             if (newItem == null) return;
-            
+
             newItem.name = $"{prefab.name} - ({x}, {y})";
             var go = newItem.gameObject;
             _grid.SetValue(x, y, go, newItem.Width, newItem.Height);
 
             _colorGameObjectMap.Put(pixelColor, go);
-
         }
-        
+
+        private bool CanBuild(int x, int y, Color32 pixelColor, GridComponent prefab)
+        {
+            if (!_grid.IsEmpty(x, y)) return false;
+
+            if (prefab.Width == 1 && prefab.Height == 1) return true;
+
+            if (prefab.Width > 1)
+            {
+                for (var x1 = x + 1; x1 < (x + prefab.Width); x1++)
+                {
+                    var nextColor = Opaque(map.GetPixel(x1, y));
+                    if (!nextColor.Equals(Opaque(pixelColor))) return false;
+                }
+                
+            }
+
+            if (prefab.Height > 1)
+            {
+                for (var y1 = y + 1; y1 < (y + prefab.Height); y1++)
+                {
+                    var nextColor = Opaque(map.GetPixel(x, y1));
+                    if (!nextColor.Equals(Opaque(pixelColor))) return false;
+                }
+            }
+
+
+            return true;
+        }
+
         private bool TryGetPrefab(int x, int y, out Color32 pixelColor, out GridComponent gridComponent)
         {
             gridComponent = default;
@@ -81,6 +112,5 @@ namespace The25thStudio.GridSystem.UI
 
             return pixelColor.a != 0 && _colorGridComponentMap.TryGetValue(opaquePixelColorNoAlpha, out gridComponent);
         }
-
     }
 }
