@@ -16,13 +16,19 @@ namespace The25thStudio.GridSystem.UI
         private Dictionary<Color32, GridComponent> _colorGridComponentMap;
         private GridColorMap _colorGameObjectMap;
 
-        private void Awake()
-        {
-            _grid = new GridSystem<GameObject>(map.width, map.height, cellSize, transform.position);
-        }
-
         private void Start()
         {
+            if (map is null) return;
+
+            Load(map);
+        }
+
+        public void Load(Texture2D pMap)
+        {
+            RemoveAllChildren();
+            map = pMap;
+            _grid = new GridSystem<GameObject>(map.width, map.height, cellSize, transform.position);
+
             CreateColorGridComponentMap();
 
             _colorGameObjectMap = new GridColorMap();
@@ -35,6 +41,14 @@ namespace The25thStudio.GridSystem.UI
             }
 
             postConstructEvent.Invoke(_colorGameObjectMap);
+        }
+
+        private void RemoveAllChildren()
+        {
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         private void CreateColorGridComponentMap()
@@ -87,7 +101,6 @@ namespace The25thStudio.GridSystem.UI
                     var nextColor = Opaque(map.GetPixel(x1, y));
                     if (!nextColor.Equals(Opaque(pixelColor))) return false;
                 }
-                
             }
 
             if (prefab.Height > 1)

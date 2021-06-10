@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace The25thStudio.GridSystem.UI
@@ -84,5 +85,16 @@ namespace The25thStudio.GridSystem.UI
             return dict;
         }
 
+        public IEnumerable<TType> GetComponents<TType>()
+        {
+            var list = new List<TType>();
+
+            foreach (var item in _dict.Values.SelectMany(gameObjects => gameObjects))
+            {
+                list.AddRange(item.GetComponents<TType>());
+            }
+
+            return list;
+        }
     }
 }
