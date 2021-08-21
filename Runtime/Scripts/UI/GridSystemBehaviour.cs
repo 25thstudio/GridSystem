@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,7 +8,7 @@ namespace The25thStudio.GridSystem.UI
     public class GridSystemBehaviour : MonoBehaviour
     {
         [SerializeField] private Texture2D map;
-        [SerializeField] [Min(0)] private float cellSize = 10f;
+        [SerializeField] [Min(0)] private float cellSize = 5f;
         [SerializeField] private GridComponent[] gridComponents;
         [SerializeField] private UnityEvent<GridColorMap> postConstructEvent;
 
@@ -18,7 +19,7 @@ namespace The25thStudio.GridSystem.UI
 
         private void Start()
         {
-            if (map is null) return;
+            if (map is { }) return;
 
             Load(map);
         }
@@ -43,6 +44,41 @@ namespace The25thStudio.GridSystem.UI
             postConstructEvent.Invoke(_colorGameObjectMap);
         }
 
+        public bool IsEmpty(Vector3 worldPosition, int width =1, int height = 1)
+        {
+            return _grid.IsEmpty(worldPosition, width, height);
+        }
+
+        public Vector3 GetGridPosition(Vector3 worldPosition)
+        {
+            return _grid.GetGridPosition(worldPosition);
+        }
+
+        public Vector3 GetWorldPosition(int x, int y)
+        {
+            return _grid.GetWorldPosition(x, y);
+        }
+
+        public void SetValue(Vector3 worldPosition, GameObject item, int width, int height)
+        {
+            _grid.SetValue(worldPosition, item, width, height);
+        }
+
+        public Vector2 Size()
+        {
+            return new Vector2(map.width, map.height);
+        }
+        
+        public bool TryGetComponent<T>(int x, int y, out T component)
+        {
+            component = default;
+            if (_grid.IsEmpty(x, y)) return false;
+
+            var value = _grid.GetValue(x, y);
+
+            return value.TryGetComponent(out component);
+        }
+        
         private void RemoveAllChildren()
         {
             foreach (Transform child in transform)
