@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -69,6 +68,9 @@ namespace The25thStudio.GridSystem.UI
             return new Vector2(map.width, map.height);
         }
         
+        
+        public float CellSize => cellSize;
+        
         public bool TryGetComponent<T>(int x, int y, out T component)
         {
             component = default;
@@ -113,6 +115,11 @@ namespace The25thStudio.GridSystem.UI
             if (!CanBuild(x, y, pixelColor, prefab)) return;
 
             var position = _grid.GetWorldPosition(x, y);
+            var realX = prefab.Width / 2.0f * cellSize;
+            var realY = prefab.Height / 2.0f * cellSize;
+            position = new Vector3(position.x + realX, position.y + realY, position.z);
+            
+            
             var newItem = Instantiate(prefab, position, Quaternion.identity, transform);
 
             if (newItem == null) return;
