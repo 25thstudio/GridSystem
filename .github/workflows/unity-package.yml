@@ -1,23 +1,22 @@
-name: Create Unity Package
-
-on: push
-
+name: Node.js Package
+on:
+  release:
+    types: [created]
 jobs:
-  echo:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest 
+    permissions: 
+      contents: read
+      packages: write 
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        echo "Runtime.meta" > metaList
-        find Runtime/ -name \*.meta >> metaList
-
-    - run: mkdir a
-
-    - uses: pCYSl5EDgo/create-unitypackage@master
-      with:
-        package-path: 'a/output.unitypackage'
-        include-files: metaList
-    - uses: actions/upload-artifact@master
-      with:
-        path: a
-        name: package
+      - uses: actions/checkout@v2
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          scope: '@25thstudio'
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
