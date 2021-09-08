@@ -10,8 +10,7 @@ namespace The25thStudio.GridSystem.UI
         [SerializeField, Range(1, 45)] private int width = 1;
         [SerializeField, Range(1,30)] private int height = 1;
 
-        [Header("Icon")] [SerializeField] private Sprite icon;
-        
+       
         [Header("Colors")]
         [SerializeField] private Color32[] mappingColors;
 
@@ -20,6 +19,5 @@ namespace The25thStudio.GridSystem.UI
         public int Height => height;
         public Color32[] MappingColors => mappingColors;
 
-        public Sprite Icon => icon;
     }
 }

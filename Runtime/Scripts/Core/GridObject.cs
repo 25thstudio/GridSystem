@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
-
 namespace The25thStudio.GridSystem
 {
-    class GridObject<T>
+    internal class GridObject<T>
     {
         private readonly int _x;
         private readonly int _y;

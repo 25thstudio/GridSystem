@@ -83,7 +83,8 @@ namespace The25thStudio.GridSystem.UI
         
         private void RemoveAllChildren()
         {
-            foreach (Transform child in transform)
+            var children = GetComponents<GridComponent>();
+            foreach (var child in children)
             {
                 Destroy(child.gameObject);
             }
