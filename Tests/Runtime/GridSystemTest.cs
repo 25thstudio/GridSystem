@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Security.Cryptography;
-using UnityEngine.TestTools;
 using NUnit.Framework;
 
 namespace The25thStudio.GridSystem.Tests
@@ -11,9 +8,10 @@ namespace The25thStudio.GridSystem.Tests
         [Test]
         public void TestSize()
         {
-            int width = 10;
-            int height = 15;
-            float cellSize = 22f;
+            const int width = 10;
+            const int height = 15;
+            const float cellSize = 22f;
+
             var grid = new GridSystem<string>(width, height, cellSize);
 
             Assert.AreEqual(width, grid.Width);
@@ -60,11 +58,11 @@ namespace The25thStudio.GridSystem.Tests
         }
 
         [Test]
-        public void TestCell2x1()
+        public void TestCell2X1()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "2x1 Cell";
-            grid.SetValue(1, 1, expected, 2, 1);
+            const string expected = "2x1 Cell";
+            grid.SetValue(1, 1, expected, 2);
 
             Assert.IsFalse(grid.IsEmpty(1, 1));
             Assert.IsFalse(grid.IsEmpty(2, 1));
@@ -85,10 +83,10 @@ namespace The25thStudio.GridSystem.Tests
         }
 
         [Test]
-        public void TestCell1x2()
+        public void TestCell1X2()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "1x2 Cell";
+            const string expected = "1x2 Cell";
             grid.SetValue(1, 1, expected, 1, 2);
 
             Assert.IsFalse(grid.IsEmpty(1, 1));
@@ -110,10 +108,10 @@ namespace The25thStudio.GridSystem.Tests
         }
 
         [Test]
-        public void TestCell2x2()
+        public void TestCell2X2()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "2x2 Cell";
+            const string expected = "2x2 Cell";
             grid.SetValue(1, 1, expected, 2, 2);
 
             Assert.IsFalse(grid.IsEmpty(1, 1));
@@ -137,79 +135,78 @@ namespace The25thStudio.GridSystem.Tests
         }
 
         [Test]
-        public void TestCellCannotAdd2x1()
+        public void TestCellCannotAdd2X1()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "2x1 Cell";
-            var setValue1x1 = grid.SetValue(1, 1, expected, 2, 1);
-            var otherValue = "Some other value";
-            var setValue2x1 = grid.SetValue(2, 1, otherValue);
+            const string expected = "2x1 Cell";
+            var setValue1X1 = grid.SetValue(1, 1, expected, 2);
+            const string otherValue = "Some other value";
+            var setValue2X1 = grid.SetValue(2, 1, otherValue);
 
-            Assert.IsTrue(setValue1x1);
-            Assert.IsFalse(setValue2x1);
+            Assert.IsTrue(setValue1X1);
+            Assert.IsFalse(setValue2X1);
 
             Assert.AreEqual(expected, grid.GetValue(1, 1));
             Assert.AreEqual(expected, grid.GetValue(2, 1));
         }
 
         [Test]
-        public void TestCellCannotAdd1x2()
+        public void TestCellCannotAdd1X2()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "1x2 Cell";
-            var setValue1x1 = grid.SetValue(1, 1, expected, 1, 2);
-            var otherValue = "Some other value";
-            var setValue1x2 = grid.SetValue(1, 2, otherValue);
+            const string expected = "1x2 Cell";
+            var setValue1X1 = grid.SetValue(1, 1, expected, 1, 2);
+            const string otherValue = "Some other value";
+            var setValue1X2 = grid.SetValue(1, 2, otherValue);
 
-            Assert.IsTrue(setValue1x1);
-            Assert.IsFalse(setValue1x2);
+            Assert.IsTrue(setValue1X1);
+            Assert.IsFalse(setValue1X2);
 
             Assert.AreEqual(expected, grid.GetValue(1, 1));
             Assert.AreEqual(expected, grid.GetValue(1, 2));
         }
 
         [Test]
-        public void TestCellCannotAdd1x2InTheEnd()
+        public void TestCellCannotAdd1X2InTheEnd()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "2x1 Cell";
-            var setValue2x1 = grid.SetValue(9, 1, expected, 2, 1);
+            const string expected = "2x1 Cell";
+            var setValue2X1 = grid.SetValue(9, 1, expected, 2);
 
-            Assert.IsFalse(setValue2x1);
+            Assert.IsFalse(setValue2X1);
             Assert.IsTrue(grid.IsEmpty(9, 1));
         }
-        
+
         [Test]
-        public void TestRemoveCell1x1()
+        public void TestRemoveCell1X1()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "1x1 Cell";
-            var setValue1x1 = grid.SetValue(9, 1, expected);
+            const string expected = "1x1 Cell";
+            var setValue1X1 = grid.SetValue(9, 1, expected);
 
-            Assert.IsTrue(setValue1x1);
+            Assert.IsTrue(setValue1X1);
 
             var removedValue = grid.RemoveValue(9, 1);
             Assert.AreEqual(expected, removedValue);
-            Assert.IsTrue(grid.IsEmpty(9,1));
+            Assert.IsTrue(grid.IsEmpty(9, 1));
         }
-        
+
         [Test]
-        public void TestRemoveCell2x1()
+        public void TestRemoveCell2X1()
         {
             var grid = new GridSystem<string>(10, 10);
-            var expected = "2x1 Cell";
-            var setValue1x1 = grid.SetValue(1, 1, expected, 2);
+            const string expected = "2x1 Cell";
+            var setValue1X1 = grid.SetValue(1, 1, expected, 2);
 
-            Assert.IsTrue(setValue1x1);
-            Assert.IsFalse(grid.IsEmpty(1,1));
-            Assert.IsFalse(grid.IsEmpty(2,1));
+            Assert.IsTrue(setValue1X1);
+            Assert.IsFalse(grid.IsEmpty(1, 1));
+            Assert.IsFalse(grid.IsEmpty(2, 1));
 
-            
+
             var removedValue = grid.RemoveValue(1, 1);
             Assert.AreEqual(expected, removedValue);
-            Assert.IsTrue(grid.IsEmpty(1,1));
-            Assert.IsTrue(grid.IsEmpty(2,1));
+            Assert.IsTrue(grid.IsEmpty(1, 1));
+            Assert.IsTrue(grid.IsEmpty(2, 1));
         }
-
     }
 }
