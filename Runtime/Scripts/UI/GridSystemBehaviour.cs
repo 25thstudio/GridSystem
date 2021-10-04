@@ -67,6 +67,11 @@ namespace The25thStudio.GridSystem.UI
         {
             return new Vector2(map.width, map.height);
         }
+
+        public GameObject RemoveValue(Vector3 worldPosition)
+        {
+            return _grid.RemoveValue(worldPosition);
+        }
         
         
         public float CellSize => cellSize;
