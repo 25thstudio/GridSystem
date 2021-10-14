@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -67,7 +68,17 @@ namespace The25thStudio.GridSystem.UI
         {
             return new Vector2(map.width, map.height);
         }
+
+        public GameObject RemoveValue(Vector3 worldPosition)
+        {
+            return _grid.RemoveValue(worldPosition);
+        }
         
+        public IEnumerable<GridComponent> GridComponentsTemplate()
+        {
+            var list = new List<GridComponent>(gridComponents);
+            return new ReadOnlyCollection<GridComponent>(list);
+        }
         
         public float CellSize => cellSize;
         
