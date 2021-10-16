@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +8,7 @@ namespace The25thStudio.GridSystem.UI
     {
         [SerializeField] private Texture2D map;
         [SerializeField] [Min(0)] private float cellSize = 5f;
-        [SerializeField] private GridComponent[] gridComponents;
+        [SerializeField] private AvailableGridComponents availableGridComponents;
         [SerializeField] private UnityEvent<GridColorMap> postConstructEvent;
 
         private GridSystem<GameObject> _grid;
@@ -76,8 +75,7 @@ namespace The25thStudio.GridSystem.UI
         
         public IEnumerable<GridComponent> GridComponentsTemplate()
         {
-            var list = new List<GridComponent>(gridComponents);
-            return new ReadOnlyCollection<GridComponent>(list);
+            return availableGridComponents;
         }
         
         public float CellSize => cellSize;
@@ -104,7 +102,7 @@ namespace The25thStudio.GridSystem.UI
         private void CreateColorGridComponentMap()
         {
             _colorGridComponentMap = new Dictionary<Color32, GridComponent>();
-            foreach (var gridComponent in gridComponents)
+            foreach (var gridComponent in availableGridComponents)
             {
                 foreach (var color in gridComponent.MappingColors)
                 {
