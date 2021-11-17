@@ -58,6 +58,11 @@ namespace The25thStudio.GridSystem.UI
             return _grid.GetWorldPosition(x, y);
         }
 
+        public void GetXY(Vector3 worldPosition, out int x, out int y)
+        {
+            _grid.GetXY(worldPosition, out x, out y);
+        }
+
         public void SetValue(Vector3 worldPosition, GameObject item, int width, int height)
         {
             _grid.SetValue(worldPosition, item, width, height);
